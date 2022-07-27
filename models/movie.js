@@ -51,20 +51,23 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   movieId: {
+    type: String,
     required: true,
   },
   nameRU: {
     type: String,
     validate: {
       validator: (v) => /^[?!,.<>а-яё0-9\s]+$/gi.test(v),
-      message: 'Должна быть ссылка',
+      message: 'Должно быть название на русском языке',
     },
   },
   nameEN: {
     type: String,
     validate: {
       validator: (v) => /^[?!,.<>a-z0-9\s\d]+$/gi.test(v),
-      message: 'Должна быть ссылка',
+      message: 'Должно быть название на английском языке',
     },
   },
 })
+
+module.exports = mongoose.model('movie', movieSchema);
