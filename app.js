@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+const DB_URL = `${process.env.MONGO_DB_URL || 'mongodb://localhost:27017'}`;
 const { ERROR } = require('./utils/utils');
 const routes = require('./routes')
 
@@ -15,7 +16,7 @@ app.use(routes);
 
 async function main() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/moviesdb');
+    await mongoose.connect(DB_URL);
   } catch (err) {
     throw new Error(err);
   }
