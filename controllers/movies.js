@@ -11,12 +11,15 @@ const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getMovies = async (req, res, next) => {
   try {
-    const movie = await Movie.find({});
-
-    if (req.user._id === movie.owner.toString()) {
-      return res.status(OK).send(movie)
-    }
-    return next(new ForbiddenError('Нет доступа'));
+    const movies = await Movie.find({});
+    let movie = [];
+    movies.forEach((everyMovie) => {
+      if (req.user._id === everyMovie.owner.toString()) {
+        movie.push(everyMovie);
+      }
+      return next(new ForbiddenError('Нет доступа'));
+    })
+    return res.status(OK).send(movie);
   } catch (err) {
     next(err);
   }
