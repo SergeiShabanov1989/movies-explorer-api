@@ -1,12 +1,8 @@
-// const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
 const Movie = require('../models/movie');
 
 const { OK, CREATED } = require('../utils/utils');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
-// const ConflictError = require('../errors/conflict-err');
-// const UnauthorizedError = require('../errors/unauthorized-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.getMovies = async (req, res, next) => {
@@ -17,7 +13,6 @@ module.exports.getMovies = async (req, res, next) => {
       if (req.user._id === everyMovie.owner.toString()) {
         movie.push(everyMovie);
       }
-      return next(new ForbiddenError('Нет доступа'));
     })
     return res.status(OK).send(movie);
   } catch (err) {
@@ -65,7 +60,7 @@ module.exports.createMovie = async (req, res, next) => {
 
 module.exports.deleteMovie = async (req, res, next) => {
   try {
-    const movie = Movie.findById(req.params.movieId)
+    const movie = await Movie.findById(req.params.movieId)
       .orFail(() => new NotFoundError('Запрашиваемый фильм не найден'));
     if (req.user._id === movie.owner.toString()) {
       await movie.remove();

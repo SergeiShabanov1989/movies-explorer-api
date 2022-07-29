@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('../controllers/users');
-const userRouter = require('./users')
-const movieRouter = require('./movies')
-// const { REGEX_ID, REGEX_URL } = require('../utils/utils');
+const userRouter = require('./users');
+const movieRouter = require('./movies');
 
 const auth = require('../middlewares/auth');
+const NotFoundError = require('../errors/not-found-err');
 
 router.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -20,10 +20,12 @@ router.post('/signup', celebrate({
     password: Joi.string().required().min(1),
   }),
 }), createUser);
-
 router.use(auth);
-
 router.use('/users', userRouter);
 router.use('/movies', movieRouter);
+
+router.use((req, res, next) => {
+  next(new NotFoundError('Запрашиваемая страница не найдена'));
+});
 
 module.exports = router;
