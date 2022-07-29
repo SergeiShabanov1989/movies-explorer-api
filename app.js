@@ -3,13 +3,17 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const { ERROR, DB_URL } = require('./utils/utils');
-const routes = require('./routes')
+const routes = require('./routes');
+const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 app.use(routes);
 
@@ -23,6 +27,10 @@ async function main() {
 }
 
 main();
+
+app.use(errorLogger);
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   if (err.statusCode) {
