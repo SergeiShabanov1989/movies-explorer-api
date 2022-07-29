@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { getMovies, createMovie } = require('../controllers/movies');
+const { getMovies, createMovie, deleteMovie } = require('../controllers/movies');
 const { REGEX_URL, REGEX_RU, REGEX_EN } = require('../utils/utils')
 
-router.get('/movies', getMovies);
-router.post('/movies', celebrate({
+router.get('/', getMovies);
+router.post('/', celebrate({
   body: Joi.object().keys({
     country: Joi.string().required().min(1),
     director: Joi.string().required().min(1),
@@ -19,5 +19,10 @@ router.post('/movies', celebrate({
     nameEN: REGEX_EN.required(),
   }),
 }), createMovie)
+router.delete('/:movieId', celebrate({
+  params: Joi.object().keys({
+    movieId: Joi.string().hex(),
+  }),
+}), deleteMovie);
 
 module.exports = router;

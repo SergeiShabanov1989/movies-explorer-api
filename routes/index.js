@@ -23,7 +23,7 @@ router.post('/signup', celebrate({
 
 router.use(auth);
 
-router.use('/', userRouter);
-router.use('/', movieRouter);
+router.use('/users', userRouter);
+router.use('/movies', movieRouter);
 
 module.exports = router;
