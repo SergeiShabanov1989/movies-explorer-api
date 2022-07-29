@@ -3,7 +3,7 @@
 const Movie = require('../models/movie');
 
 const { OK, CREATED } = require('../utils/utils');
-// const NotFoundError = require('../errors/not-found-err')
+const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 // const ConflictError = require('../errors/conflict-err');
 // const UnauthorizedError = require('../errors/unauthorized-err');
@@ -60,6 +60,23 @@ module.exports.createMovie = async (req, res, next) => {
     } else {
       next(err);
     }
+  }
+};
+
+module.exports.deleteMovie = async (req, res, next) => {
+  try {
+    const movie = Movie.findById(req.params.movieId)
+      .orFail(() => new NotFoundError('Запрашиваемый фильм не найден'));
+    if (req.user._id === movie.owner.toString()) {
+      await movie.remove();
+      return res.send('Фильм удален');
+    }
+    return next(new ForbiddenError('Нет доступа'));
+  } catch (err) {
+    if (err.name === 'CastError') {
+      return next(new BadRequestError('Неверное передан id'));
+    }
+    return next(err);
   }
 };
 
