@@ -4,8 +4,8 @@ const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const { OK, CREATED } = require('../utils/utils');
-const NotFoundError = require('../errors/not-found-err')
+const { OK, CREATED } = require('../utils/constants');
+const NotFoundError = require('../errors/not-found-err');
 const BadRequest = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
@@ -45,8 +45,7 @@ module.exports.createUser = async (req, res, next) => {
 module.exports.updateUserInfo = async (req, res, next) => {
   try {
     const { name, email } = req.body;
-
-    const user = User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       req.user._id,
       { name, email },
       { new: true, runValidators: true },
@@ -55,6 +54,9 @@ module.exports.updateUserInfo = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       return next(new BadRequest('Переданы некорректные данные при обновлении профиля'));
+    }
+    if (err.code === 11000) {
+      return next(new ConflictError('Такой email уже зарегистрирован'));
     }
     return next(err);
   }
@@ -73,7 +75,7 @@ module.exports.login = async (req, res, next) => {
       return next(new UnauthorizedError('Неправильный email или пароль'));
     }
     const token = await jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', { expiresIn: '7d' });
-    return res.status(OK).send({ token })
+    return res.status(OK).send({ token });
   } catch (err) {
     if (err.statusCode === 401) {
       return next(new UnauthorizedError('Вы не авторизованы'));

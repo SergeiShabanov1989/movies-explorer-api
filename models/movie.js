@@ -60,6 +60,7 @@ const movieSchema = new mongoose.Schema({
       validator: (v) => /^[?!,.<>А-ЯЁа-яё0-9\s]+$/gi.test(v),
       message: 'Должно быть название на русском языке',
     },
+    required: true,
   },
   nameEN: {
     type: String,
@@ -67,7 +68,8 @@ const movieSchema = new mongoose.Schema({
       validator: (v) => /^[?!,.<>A-Za-z0-9\s\d]+$/gi.test(v),
       message: 'Должно быть название на английском языке',
     },
+    required: true,
   },
-})
+});
 
 module.exports = mongoose.model('movie', movieSchema);

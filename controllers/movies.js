@@ -1,6 +1,6 @@
 const Movie = require('../models/movie');
 
-const { OK, CREATED } = require('../utils/utils');
+const { OK, CREATED } = require('../utils/constants');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ForbiddenError = require('../errors/forbidden-err');
@@ -8,15 +8,15 @@ const ForbiddenError = require('../errors/forbidden-err');
 module.exports.getMovies = async (req, res, next) => {
   try {
     const movies = await Movie.find({});
-    let movie = [];
+    const movie = [];
     movies.forEach((everyMovie) => {
       if (req.user._id === everyMovie.owner.toString()) {
         movie.push(everyMovie);
       }
-    })
+    });
     return res.status(OK).send(movie);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
@@ -33,7 +33,8 @@ module.exports.createMovie = async (req, res, next) => {
       thumbnail,
       movieId,
       nameRU,
-      nameEN } = req.body;
+      nameEN,
+    } = req.body;
 
     const movie = await Movie.create({
       country,
@@ -47,14 +48,14 @@ module.exports.createMovie = async (req, res, next) => {
       owner: req.user._id,
       movieId,
       nameRU,
-      nameEN })
-    res.status(CREATED).send(movie);
+      nameEN,
+    });
+    return res.status(CREATED).send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new BadRequestError('Переданны некоректные данные'))
-    } else {
-      next(err);
+      return next(new BadRequestError('Переданны некоректные данные'));
     }
+    return next(err);
   }
 };
 
@@ -64,7 +65,7 @@ module.exports.deleteMovie = async (req, res, next) => {
       .orFail(() => new NotFoundError('Запрашиваемый фильм не найден'));
     if (req.user._id === movie.owner.toString()) {
       await movie.remove();
-      return res.send('Фильм удален');
+      return res.send({ message: 'Фильм удален' });
     }
     return next(new ForbiddenError('Нет доступа'));
   } catch (err) {
@@ -74,4 +75,3 @@ module.exports.deleteMovie = async (req, res, next) => {
     return next(err);
   }
 };
-
