@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const {REGEX_URL, REGEX_RU, REGEX_EN} = require("./utils");
+const { REGEX_URL, REGEX_RU, REGEX_EN } = require('./utils');
 
 const createUserJoiValidation = celebrate({
   body: Joi.object().keys({
@@ -52,4 +52,3 @@ module.exports = {
   createMovieJoiValidation,
   deleteMovieJoiValidation,
 };
-

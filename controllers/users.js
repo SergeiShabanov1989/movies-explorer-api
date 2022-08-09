@@ -77,9 +77,6 @@ module.exports.login = async (req, res, next) => {
     const token = await jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', { expiresIn: '7d' });
     return res.status(OK).send({ token });
   } catch (err) {
-    if (err.statusCode === 401) {
-      return next(new UnauthorizedError('Вы не авторизованы'));
-    }
     return next(err);
   }
 };
