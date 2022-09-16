@@ -24,7 +24,6 @@ const options = {
     'http://api.sergeishabanov.diplom.nomoredomains.xyz',
     'https://github.com/SergeiShabanov1989',
   ],
-  credentials: true,
 };
 
 app.use('*', cors(options));
