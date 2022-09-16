@@ -19,6 +19,8 @@ const options = {
   origin: [
     'http://localhost:3000',
     'https://api.nomoreparties.co/beatfilm-movies',
+    'https://api.sergeishabanov.diplom.nomoredomains.xyz',
+    'http://api.sergeishabanov.diplom.nomoredomains.xyz',
     'https://sergeishabanov.diplom.nomoredomains.sbs/',
     'http://sergeishabanov.diplom.nomoredomains.sbs/',
     'https://github.com/SergeiShabanov1989',
