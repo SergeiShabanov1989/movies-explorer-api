@@ -12,17 +12,16 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { limiter } = require('./middlewares/limiter');
 const { handleErrors } = require('./middlewares/handleErrors');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const app = express();
 
 const options = {
   origin: [
     'http://localhost:3000',
-    'https://api.nomoreparties.co/beatfilm-movies',
+    'https://sergeishabanov.diplom.nomoredomains.sbs',
+    'http://sergeishabanov.diplom.nomoredomains.sbs',
     'https://api.sergeishabanov.diplom.nomoredomains.xyz',
     'http://api.sergeishabanov.diplom.nomoredomains.xyz',
-    'https://sergeishabanov.diplom.nomoredomains.sbs/',
-    'http://sergeishabanov.diplom.nomoredomains.sbs/',
     'https://github.com/SergeiShabanov1989',
   ],
   credentials: true,
