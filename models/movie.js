@@ -33,7 +33,12 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/.test(v),
+      validator: function checkCredentials() {
+        if (!/(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/ || !/(^[A-Za-z])/) {
+          return false;
+        }
+        return true;
+      },
       message: 'Должна быть ссылка',
     },
   },
@@ -63,5 +68,10 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+// validate: {
+//   validator: (v) => /(https?:\/\/|ftps?:\/\/|www\.)((?![.,?!;:()]*(\s|$))[^\s]){2,}/ || /(^[A-Za-z])/.test(v),
+//     message: 'Должна быть ссылка',
+// },
 
 module.exports = mongoose.model('movie', movieSchema);

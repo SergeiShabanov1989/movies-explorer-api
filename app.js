@@ -18,6 +18,7 @@ const app = express();
 const options = {
   origin: [
     'http://localhost:3000',
+    'https://api.nomoreparties.co',
     'https://sergeishabanov.diplom.nomoredomains.sbs',
     'http://sergeishabanov.diplom.nomoredomains.sbs',
     'https://api.sergeishabanov.diplom.nomoredomains.xyz',
